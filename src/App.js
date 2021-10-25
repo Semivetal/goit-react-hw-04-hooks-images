@@ -1,23 +1,45 @@
-import logo from "./logo.svg";
+import React, { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import Searchbar from "./components/Searchbar/Searchbar";
+import ImageGallery from "./components/ImageGallery/ImageGallery";
+import Modal from "./components/Modal/Modal";
 import "./App.css";
 
 function App() {
+  const [pictureQuery, setPictureQeury] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalPicture, setModalPicture] = useState("");
+  const [page, setPage] = useState(1);
+
+  const handleFormSubmit = (pictureQuery) => {
+    setPictureQeury(pictureQuery);
+    setPage(1);
+  };
+
+  const openModal = (modalPicture) => {
+    setModalPicture(modalPicture);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleLoadMore = () => {
+    setPage((page) => page + 1);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Searchbar onSubmit={handleFormSubmit} />
+      <ImageGallery
+        query={pictureQuery}
+        onClick={openModal}
+        handleLoadMore={handleLoadMore}
+        page={page}
+      />
+      {showModal && <Modal modalPicture={modalPicture} onClose={closeModal} />}
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 }
